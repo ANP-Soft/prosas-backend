@@ -41,7 +41,7 @@ const loginUser = async (req = request, res = response) => {
         //Generar JWT
         const token = await generarJWT(user.id, user.name);
 
-        res.json({
+        res.status(200).json({
             ok: true,
             uid: user.id,
             name: user.name,
@@ -61,16 +61,30 @@ const loginUser = async (req = request, res = response) => {
 
 const revalidarToken = async (req , res = response) => {
 
-    const { _id: uid, name, role} = req.user;
-    const token = await generarJWT(uid, name);
+    const { _id: uid, name, role } = req.user;
+    
+    try {
 
-    res.json({
-        ok: true,
-        token,
-        uid,
-        name,
-        role
-    });
+        const token = await generarJWT(uid, name);
+
+        res.status(200).json({
+            ok: true,
+            token,
+            uid,
+            name,
+            role
+        });
+
+    } catch (err) {
+        //Error al renovar token -- generarJWT:failed code: 1
+        console.log(err);
+        return res.status(400).json({
+            ok: false,
+            msg: 'Error al renovar token -- code: 1'
+        });
+    }
+
+    
 }
 
 const googleSignIn = async (req, res = response) => {
@@ -106,7 +120,7 @@ const googleSignIn = async (req, res = response) => {
             //GENERAR EL JWT
             const token = await generarJWT(user.id);
 
-            res.json({
+            res.status(200).json({
                 ok: true,
                 user,
                 token
@@ -163,7 +177,7 @@ const facebookSignIn = async (req, res = response) => {
             //GENERAR EL JWT
             const token = await generarJWT(user.id);
 
-            res.json({
+            res.status(200).json({
                 ok: true,
                 user,
                 token

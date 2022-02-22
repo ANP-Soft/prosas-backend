@@ -17,11 +17,10 @@ class Server {
 
         this.paths = {
             auth: '/api/auth',
-            users: '/api/users',
-            // search: '/api/search',
-            // categories: '/api/categories',
-            // products: '/api/products',
-            // orders: '/api/orders',
+            users: '/api/user',
+            categories: '/api/category',
+            products: '/api/product',
+            orders: '/api/order',
         }
 
         //Conectar a DB
@@ -54,7 +53,10 @@ class Server {
 
     routes() {
         this.app.use(this.paths.auth, require('../routes/auth'));
-        this.app.use(this.paths.users, require('../routes/users'));
+        this.app.use(this.paths.users, require('../routes/user'));
+        this.app.use(this.paths.categories, require('../routes/category'));
+        this.app.use(this.paths.products, require('../routes/product'));
+        this.app.use(this.paths.orders, require('../routes/order'));
 
         this.app.get("*" , (req, res) => {
             res.sendFile(path.resolve(__dirname, '../public', 'index.html'));

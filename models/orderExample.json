@@ -3,27 +3,27 @@
     "number": "767",
     "dateCreated": "01-09-2021T03:45:00",
     "customer": "dsadsa23213123fdsadiadh2",
-    "retiroTienda": "true/false",
+    "retiro": "true/false",
     "delivery": "true/false",
     "dirDespacho": "Moneda 2264, depto 309. Santiago Centro. Santiago. Región Metropolitana",
     "content":[
         {
             "product": "1zbb21813dasdg4e21xz312",
-            "cantidad": "2"
+            "quantity": "2"
         },
         {
             "product": "3nm3b32dsdae2131cv2",
-            "cantidad": "1"
+            "quantity": "1"
         },
         {
             "product": "7jj664sd13dasdg4e2131d2",
-            "cantidad": "5"
+            "quantity": "5"
         }
     ],
     "subtotal": "120000",
     "descuento": "11000",
     "valorDelivery": "6000",
     "total": "115000",
-    "paid": "true/false",
+    "paid": "true",
     "datePaid": "01-09-2021T05:00:00"
 }

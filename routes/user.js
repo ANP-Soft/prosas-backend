@@ -2,7 +2,6 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validarCampos, validarJWT, tieneRole } = require('../middlewares');
-
 const { newUser, updateUser, getUser, deleteUser } = require('../controllers/users');
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
 
@@ -10,7 +9,7 @@ const router = Router();
 
 /*
     Rutas de Usuarios
-    {{url}} + /api/usuarios
+    {{url}} + /api/user
 */
 
 //Crear Usuario
