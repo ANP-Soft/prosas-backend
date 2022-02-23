@@ -1,15 +1,11 @@
 const { Schema, model } = require('mongoose');
+const { AutoIncrement } = require('../db/config');
 
 const OrderSchema = Schema({
 
-    number: {
-        type: Number,
-        required: [true, 'Numero de orden es obligatorio'],
-        unique: true
-    },
     dateCreated: {
         type: Date,
-        required: [true, 'Fecha de creacion es obligatorio'],
+        required: [true, 'dateCreated es obligatorio'],
     },
     customer: {
         type: Schema.Types.ObjectId,
@@ -18,11 +14,11 @@ const OrderSchema = Schema({
     },
     retiro: {
         type: Boolean,
-        required:  [true, 'Retiro es obligatorio'],
+        required:  [true, 'retiro es obligatorio'],
     },
     delivery: {
         type: Boolean,
-        required: [true, 'Delivery es obligatorio'],
+        required: [true, 'delivery es obligatorio'],
     },
     deliveryAddress: {
         type: String,
@@ -34,18 +30,18 @@ const OrderSchema = Schema({
     },
     content: {
         type: [Schema.Types.Mixed],
-        required: [true, 'Contenido de Orden es obligatorio'],
+        required: [true, 'content es obligatorio'],
     },
     paid: {
         type: Boolean,
-        required: [true, 'Pagado es obligatorio'],
+        required: [true, 'paid es obligatorio'],
     },
     datePaid: {
         type: Date
     },
     subtotal: {
         type: Number,
-        required: [true, 'Subtotal es obligatorio'],
+        required: [true, 'subtotal es obligatorio'],
     },
     discount: {
         type: Number,
@@ -53,19 +49,26 @@ const OrderSchema = Schema({
     },
     total: {
         type: Number,
-        required: [true, 'Total es obligatorio'],
+        required: [true, 'total es obligatorio'],
     },
     status: {
         type: Boolean,
         default: true
+    },
+    lastModifiedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 
 OrderSchema.methods.toJSON = function () {
-    const { __v, _id, ...data } = this.toObject();
-    data.ordId = _id;
+    const { __v, _id, ...order } = this.toObject();
+    order.ordId = _id;
 
-    return data;
+    return order;
 }
+
+OrderSchema.plugin(AutoIncrement, { inc_field: 'number', start_seq: 1000 });
 
 module.exports = model('Order', OrderSchema);

@@ -59,7 +59,7 @@ const getProduct = async (req = request, res = response) => {
 
 const newProduct = async (req = request, res = response) => {
    
-    const { status, user, ...body } = req.body; //en body: name, category, price, description, stock, img
+    const { status, user, sku, ...body } = req.body; //en body: name, category, price, description, stock, img
 
     try {
 
@@ -100,7 +100,7 @@ const newProduct = async (req = request, res = response) => {
 const updateProduct = async (req = request, res = response) => {
    
     const { id } = req.params;
-    const { status, user, ...body } = req.body; //en body: name, category, price, description, stock, img //no se actualiza ni status ni user introducido por REQUEST
+    const { status, user, sku, ...body } = req.body; //en body: name, category, price, description, stock, img //no se actualiza ni status ni user introducido por REQUEST
 
     try {
         

@@ -59,15 +59,18 @@ const getOrder = async (req = request, res = response) => {
 }
 
 const newOrder = async (req = request, res = response) => {
-
-    const { user, ...body } = req.body; //en body: number, dateCreated, customer, retiro, delivery, content, paid, subtotal, total, status
+    
+    //body
+    //Required --> dateCreated, customer, retiro, delivery, content, paid, subtotal, total
+    //Optional --> deliveryAddress, deliveryPrice, datePaid, discount
+    const { user, number, ...body } = req.body;
 
     try {
 
         //Generar data a guardar
         const data = {
             ...body,
-            user: req.user._id
+            lastModifiedBy: req.user._id
         };
 
         const order = new Order(data);

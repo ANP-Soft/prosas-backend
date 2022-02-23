@@ -1,4 +1,4 @@
-const { Role, User, Category, Product } = require('../models');
+const { Role, User, Category, Product, Order } = require('../models');
 
 
 
@@ -60,7 +60,7 @@ const existeCategoriaId = async (_id) => {
 const existeCategoriaNombre = async (name = '') => {
 
     const existeCatNombre = await Category.findOne({name});
-    if(existeCatNombre){
+    if (existeCatNombre) {
         throw new Error(`El nombre ${existeCatNombre.name} ya se encuentra registrado a una categoria, no se puede actualizar`);
     }
 }
@@ -100,13 +100,52 @@ const existeProductoNombre = async (name = '') => {
 }
 
 
+//Validadores de Orden
+    //Verificar si existe id orden
+const existeOrderId = async (_id) => {
+    //verificar si cumple la regla de id de mongo
+    if (_id.match(/^[0-9a-fA-F]{24}$/)) {
+
+        //Verificar si la orden existe
+        const existeOrden = await Order.findById({ _id });
+
+        if(!existeOrden){
+            throw new Error(`El ID de orden ${ _id } no existe`);
+        }
+
+        //verificar si la orden esta borrada
+        if(!existeOrden.status)
+        {
+            throw new Error(`La orden se encuentra deshabilitada`);    
+        }
+
+    } else {
+        throw new Error(`El ID de orden ${ _id } no es válido`);
+    }
+
+
+}
+
+//NOT USED, using --> mongo-secuence autoIncrement
+// const existeOrderNumber = async (number) => {
+    
+//     const existeOrderNumber = await Order.findOne({ number });
+//     if (existeOrderNumber) {
+//         throw new Error(`El numero de orden ${existeOrderNumber.number} ya se encuentra en uso, no se puede crear`);
+//     }
+// }
 
 module.exports = {
     esRoleValido,
     emailExiste,
+    
     existeUsuarioPorId,
+    
     existeCategoriaId,
     existeCategoriaNombre,
+    
     existeProductoId,
-    existeProductoNombre
+    existeProductoNombre,
+    
+    existeOrderId,
 }

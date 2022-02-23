@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { AutoIncrement } = require('../db/config');
 
 const ProductSchema = Schema({
     name: {
@@ -44,4 +45,6 @@ ProductSchema.methods.toJSON = function(){  //funcion normal para llamar a this 
     //user;
 }
 
-module.exports = model('Product', ProductSchema );
+ProductSchema.plugin(AutoIncrement, { inc_field: 'sku', start_seq: 1000 });
+
+module.exports = model('Product', ProductSchema);

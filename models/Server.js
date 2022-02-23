@@ -21,6 +21,7 @@ class Server {
             categories: '/api/category',
             products: '/api/product',
             orders: '/api/order',
+            search: '/api/search'
         }
 
         //Conectar a DB
@@ -57,6 +58,7 @@ class Server {
         this.app.use(this.paths.categories, require('../routes/category'));
         this.app.use(this.paths.products, require('../routes/product'));
         this.app.use(this.paths.orders, require('../routes/order'));
+        this.app.use(this.paths.search, require('../routes/search'));
 
         this.app.get("*" , (req, res) => {
             res.sendFile(path.resolve(__dirname, '../public', 'index.html'));

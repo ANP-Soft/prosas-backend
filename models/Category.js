@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { AutoIncrement } = require('../db/config');
 
 const CategorySchema = Schema({
 
@@ -25,5 +26,7 @@ CategorySchema.methods.toJSON = function(){  //funcion normal para llamar a this
 
     return category;
 }
+
+CategorySchema.plugin(AutoIncrement, { inc_field: 'code', start_seq: 100 });
 
 module.exports = model('Category', CategorySchema);

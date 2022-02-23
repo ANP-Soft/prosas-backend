@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 require('dotenv').config();
 
 const dbConnection = async() => {
@@ -24,5 +25,6 @@ const dbConnection = async() => {
 
 
 module.exports = {
-    dbConnection
+    dbConnection,
+    AutoIncrement
 };
