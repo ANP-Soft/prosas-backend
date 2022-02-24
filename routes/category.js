@@ -31,7 +31,7 @@ router.use( validarJWT );
 //crear categoria -- privado -- admin role(post)
 router.post('/', [
     tieneRole('ADMIN_ROLE'),
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('name','El campo name es obligatorio').not().isEmpty(),
     validarCampos  
 ], newCategory);
 
@@ -39,8 +39,8 @@ router.post('/', [
 router.put('/:id', [
     tieneRole('ADMIN_ROLE'),
     check('id').custom( existeCategoriaId ),
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('nombre').custom( existeCategoriaNombre ),
+    check('name','El campo name es obligatorio').not().isEmpty(),
+    check('name').custom( existeCategoriaNombre ),
     validarCampos
 ], updateCategory);
 

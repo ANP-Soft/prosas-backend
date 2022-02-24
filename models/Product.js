@@ -40,9 +40,8 @@ const ProductSchema = Schema({
 
 ProductSchema.methods.toJSON = function(){  //funcion normal para llamar a this de esta instancia, si fuera funcion de flecha llamar al this apunta a la instancia fuera de la misma
     const { __v, _id, ...product } = this.toObject();
-    product.uid = _id;
+    product.pid = _id;
     return product;
-    //user;
 }
 
 ProductSchema.plugin(AutoIncrement, { inc_field: 'sku', start_seq: 1000 });

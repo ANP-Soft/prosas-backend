@@ -3,7 +3,6 @@ const cors = require('cors'); //CORS-> Cross-origin resource sharing (CORS)
 // const fileUpload = require('express-fileupload');
 const { createServer } = require('http');
 
-
 const { validarJSON } = require('../middlewares/validar-json');
 const { dbConnection } = require('../db/config');
 const path = require('path');

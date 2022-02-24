@@ -17,15 +17,15 @@ const conn = mongoose.createConnection(process.env.MONGODB_CNN, {
 
 const validColection = (req, res = response, next) =>{
 
-    const { coleccion } = req.params;
-    if(coleccion === 'porCategoria' ) return next(); //condicion para buscar por categoria
+    const { collection } = req.params;
+    if(collection === 'porCategoria' ) return next(); //condicion para buscar por categoria
 
-    conn.db.listCollections({name: coleccion})
+    conn.db.listCollections({name: collection})
         .next((err, collinfo)=> {
             if(!collinfo){ 
                 return res.status(400).json({
                     ok: false,
-                    msg: `La coleccion ${ coleccion } no existe`
+                    msg: `La coleccion ${ collection } no existe`
                 });
             }
             else{

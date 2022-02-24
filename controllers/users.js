@@ -28,12 +28,11 @@ const newUser = async (req, res = response) => {
         await user.save();
 
         //Generate JWT
-        const token = generarJWT(user.id, user.name);
+        const token = await generarJWT(user.id, user.name);
         res.status(201).json({
             ok: true,
             uid: user.id,
             name: user.name,
-            role: user.role,
             token
         });
         
@@ -50,7 +49,7 @@ const newUser = async (req, res = response) => {
 const updateUser = async (req, res = response) => {
 
     const { id } = req.params;
-    const { _id, password, ...resto  } = req.body; //Rest Parameters, gathers the rest of the list of arguments into an array
+    const { _id, password, role, ...resto  } = req.body; //Rest Parameters, gathers the rest of the list of arguments into an array
 
     try {
 
@@ -65,7 +64,7 @@ const updateUser = async (req, res = response) => {
 
         res.status(200).json({
             ok: true,
-            ...user
+            user
         });
 
     } catch (err) {
@@ -78,7 +77,7 @@ const updateUser = async (req, res = response) => {
     }
 }
 
-const getUser = async (req, res = response) => {
+const getUsers = async (req, res = response) => {
 
     const { limit = 5, desde = 0 } = req.query;
     const query = { status: true };
@@ -111,6 +110,28 @@ const getUser = async (req, res = response) => {
 
 }
 
+const getUser = async (req, res = response) => {
+
+    const { id } = req.params;
+
+    try {
+        
+        const user = await User.findById(id);
+        res.status(200).json({
+            ok: true,
+            user
+        });
+
+    } catch (err) {
+        //Error en obtener User -- code: 1
+        console.log(err);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error en obtener User -- code: 1'
+        });
+    }
+}
+
 const deleteUser = async (req, res = response) => {
     
     const { id } = req.params;
@@ -118,7 +139,7 @@ const deleteUser = async (req, res = response) => {
     try {
 
         //status: false
-        const user = await User.findByIdAndUpdate(id, { status: false });
+        const user = await User.findByIdAndUpdate(id, { status: false }, { new: true });
         res.status(200).json({
             ok: true,
             user
@@ -139,6 +160,7 @@ const deleteUser = async (req, res = response) => {
 module.exports = {
     newUser,
     updateUser,
+    getUsers,
     getUser,
     deleteUser,
 }

@@ -28,10 +28,15 @@ const OrderSchema = Schema({
         type: Number,
         default: 0
     },
-    content: {
-        type: [Schema.Types.Mixed],
-        required: [true, 'content es obligatorio'],
-    },
+    content: [{
+        product : {
+            type: Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number
+        }
+    }],
     paid: {
         type: Boolean,
         required: [true, 'paid es obligatorio'],

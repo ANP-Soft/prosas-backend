@@ -46,7 +46,7 @@ const existeCategoriaId = async (_id) => {
             }
 
             //verificar si la categoria esta borrada
-            if(!existeCat.estado)
+            if(!existeCat.status)
             {
                 throw new Error(`La categoria se encuentra deshabilitada`);    
             }
@@ -95,7 +95,7 @@ const existeProductoNombre = async (name = '') => {
     
     const existeProdNombre = await Product.findOne({ name: name.toUpperCase() });
     if(existeProdNombre){
-        throw new Error(`El producto ${ existeProdNombre.name } ya se encuentra registrado, no se puede actualizar`);
+        throw new Error(`El producto ${ existeProdNombre.name } ya se encuentra registrado, no se puede crear`);
     }
 }
 

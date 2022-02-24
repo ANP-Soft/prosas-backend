@@ -3,7 +3,8 @@ const { check } = require('express-validator');
 
 const { getOrder, getOrders, newOrder, updateOrder, deleteOrder } = require('../controllers/order');
 const { existeOrderId, existeUsuarioPorId } = require('../helpers/db-validators');
-const { validarCampos, tieneRole } = require('../middlewares');
+const { validarCampos, tieneRole, validarJWT } = require('../middlewares');
+const { isDate } = require('../helpers/date-validators');
 
 /**
  *      {{url}}/api/order
@@ -32,7 +33,7 @@ router.get('/', [
 router.post('/', [
     tieneRole('ADMIN_ROLE'),
     check('dateCreated', 'La campo dateCreated es obligatorio').not().isEmpty(),
-    check('dateCreated').isDate(),
+    check('dateCreated').custom( isDate ),
     check('customer', 'El campo customer es obligatorio').not().isEmpty(),
     check('customer').custom(existeUsuarioPorId),
     check('retiro', 'El campo retiro es obligatorio').not().isEmpty(),
@@ -47,7 +48,7 @@ router.post('/', [
 
     check('paid', 'El campo paid es obligatorio').not().isEmpty(),
     check('paid').isBoolean(),
-    check('datePaid').isDate().optional({ nullable: true }),
+    check('datePaid').custom( isDate ).optional({ nullable: true }),
     check('subtotal', 'El campo subtotal es obligatorio').not().isEmpty(),
     check('subtotal').isNumeric(),
     check('discount').isNumeric().optional({ nullable: true }),
@@ -63,8 +64,7 @@ router.put('/:id', [
     check('id').custom(existeOrderId),
     check('paid', 'El campo paid es obligatorio').not().isEmpty(),
     check('paid').isBoolean(),
-    check('datePaid', 'El campo datePaid es obligatorio').not().isEmpty(),
-    check('datePaid').isDate(),
+    check('datePaid').custom( isDate ).optional({ nullable: true }),
     
     validarCampos
 ], updateOrder);

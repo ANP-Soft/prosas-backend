@@ -14,7 +14,14 @@ const getOrders = async (req = request, res = response) => {
             Order.find(query)
                 .skip(Number(from))
                 .limit(Number(limit))
-                .populate('customer', ['name','email'])
+                .populate('customer', ['name', 'email'])
+                .populate({
+                    path: 'content',
+                    populate: {
+                        path: 'product',
+                        select: ['name', 'price', 'sku']
+                    }
+                })
             ]);
 
         res.status(200).json({
@@ -41,7 +48,14 @@ const getOrder = async (req = request, res = response) => {
     try {
 
         const order = await Order.findById(id)
-            .populate('customer', ['name', 'email']);
+            .populate('customer', ['name', 'email'])
+            .populate({
+                path: 'content',
+                populate: {
+                    path: 'product',
+                    select: ['name', 'price', 'sku']
+                }
+            });
         
         res.status(200).json({
             ok: true,
@@ -100,19 +114,19 @@ const updateOrder = async (req = request, res = response) => {
         //cambiable --> paid, datePaid
         const { paid, datePaid,  ...body } = req.body; //en body: number, dateCreated, customer, retiro, delivery, deliveryAddress, deliveryPrice, content, subtotal, discount, total, status
 
-       if (!(paid || datePaid )) {
-            //Error al actualizar orden updateOrder:failed -- code: 1
-            //No hay datos que actualizar
-            res.status(400).json({
-                ok: false,
-                msg: 'Error al update orden -- code: 1'
-            });
+        let data;
+        if (!!datePaid) { 
+            data = {
+                paid,
+                datePaid
+            }
+        } else {
+            data = {
+                paid
+            }
         }
 
-        const data = {
-            paid,
-            datePaid
-        }
+        
 
         const order = await Order.findByIdAndUpdate(id, data, { new: true });
 

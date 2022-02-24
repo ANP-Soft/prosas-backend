@@ -43,10 +43,12 @@ const searchCategories = async (word = '', res = response) => {
 
     //No es ID Mongo
     const regex = new RegExp(word, 'i');
+    const orQuery = (isNaN(Number(word))) ? [{ name: regex }] : [{ code: word }];
     const category = await Category.find({
-        $or: [{ name: regex }, { code: regex }],
+        // $or: [{ name: regex }, { code: regex }],
+        $or: orQuery,
         $and: [{ status: true }]
-        }).populate('user', ['name', 'email']);;
+        }).populate('user', ['name', 'email']);
     
     return res.status(200).json({
         ok: true,
@@ -71,8 +73,9 @@ const searchProducts = async (word = '', res = response) => {
 
     //No es ID Mongo
     const regex = new RegExp(word, 'i');
+    const orQuery = (isNaN(Number(word))) ? [{ name: regex }, { description: regex }] : [{ sku: word }];
     const product = await Product.find({
-        $or: [{ name: regex }, { description: regex }, { sku: regex }],
+        $or: orQuery,
         $and: [{ status: true }]
                 }).populate('category', ['name', 'code'] )
         .populate('user', ['name', 'email']);
@@ -92,48 +95,59 @@ const searchOrder = async (word = '', res = response) => {
             .populate('customer', ['name', 'email'])
             .populate('lastModifiedBy', ['name', 'email']);
         
-        return res.status(200).json({
-            ok: true,
-            results: (order) ? [order] : []
-        });
+        if (order) {
+            return res.status(200).json({
+                ok: true,
+                results: [order]
+            });
+        } else {
+            
+            const order = await Order.find({
+                $and: [{ customer: word }, { status: true }]
+                }).populate('customer', ['name', 'email'])
+                .populate('lastModifiedBy', ['name', 'email']);
+            
+            return res.status(200).json({
+                ok: true,
+                results: order
+            });
+        }
     }
 
     //No es ID Mongo
-    const regex = new RegExp(word, 'i');
     const order = await Order.find({
-        $or: [{ number: regex }, { customer: regex }],
-        $and: [{ status: true }]
+        $and: [{ number: word }, { status: true }]
         }).populate('customer', ['name', 'email'])
-        .populate('lastModifiedBy', ['name', 'email']);;
+        .populate('lastModifiedBy', ['name', 'email']);
 
     return res.status(200).json({
         ok: true,
-        results: order
+         results: order
     });
 }
 
-const search = async (res = response, req = request) => {
+const search = async (req, res = response) => {
 
     const { collection, word } = req.params;
 
     switch (collection) {
 
-        case 'user':
+        case 'users':
             //search by 'name' or 'email' or 'role'
             searchUsers(word, res);
             break;
         
-        case 'category':
+        case 'categories':
             //search by 'name', 'code'
             searchCategories(word, res);
             break;
     
-        case 'product':
+        case 'products':
             //search by 'name', 'description', 'sku'
             searchProducts(word, res);
             break;
     
-        case 'order':
+        case 'orders':
             //search by 'number','customer(idmongo)'
             searchOrder(word, res);
             break;

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
-const { validColection, validarCampos } = require('../middlewares');
 const { search } = require('../controllers/search');
+const { validColection, validarCampos } = require('../middlewares');
 
 
 
@@ -12,11 +12,12 @@ const router = Router();
     {{url}} + /api/search
 */
 
-
 router.get('/:collection/:word', [
     validColection,
     validarCampos
 ], search);
+
+
 
 
 
