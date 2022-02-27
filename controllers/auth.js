@@ -5,6 +5,7 @@ const { User } = require('../models');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/verify-google');
 const { facebookVerify } = require('../helpers/verify-facebook');
+const { reCaptchaV3Verify } = require('../helpers/verify-reCaptchaV3');
 
 
 const loginUser = async (req = request, res = response) => {
@@ -202,9 +203,48 @@ const facebookSignIn = async (req, res = response) => {
 
 }
 
+const reCaptcha = async (req, res = response) => {
+
+    const { idTokenReCaptcha } = req.body;
+    try {
+        
+        const { success, score } = await reCaptchaV3Verify(idTokenReCaptcha);
+        if (!success) {
+            //Fallo en comprobacion de estado reCaptcha V3
+            return res.status(400).json({
+                ok: false,
+                msg: 'Error en comprobacion estado reCaptcha v3, tal vez seas un robot'
+            })
+        } else if (score <= 0.5) {
+            //Fallo en comprobacion de score reCaptcha V3
+            return res.status(400).json({
+                    ok: false,
+                    msg: 'Error en comprobacion de score en reCaptcha v3, tal vez seas un robot'
+                })
+        } else {
+            
+            return res.status(200).json({
+                ok: true,
+                msg: 'No eres un robot ;)'
+            });
+        }
+    
+    } catch (err) {
+        
+        //Internal google recaptcha api error
+        console.log(err);
+        return res.status(400).json({
+            ok: false,
+            msg: 'Internal google recaptcha api error'
+        });
+    }
+
+}
+
 module.exports = {
     loginUser, 
     revalidarToken, 
     googleSignIn,
-    facebookSignIn
+    facebookSignIn,
+    reCaptcha
 }

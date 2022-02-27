@@ -4,6 +4,8 @@ const { check } = require('express-validator');
 const { validarCampos, validarJWT, tieneRole } = require('../middlewares');
 const { getCategory, getCategories, newCategory, updateCategory, deleteCategory } = require('../controllers/category');
 const { existeCategoriaId, existeCategoriaNombre} = require('../helpers/db-validators');
+const { isDate } = require('../helpers/date-validators');
+
 const router = Router();
 
 
@@ -31,7 +33,8 @@ router.use( validarJWT );
 //crear categoria -- privado -- admin role(post)
 router.post('/', [
     tieneRole('ADMIN_ROLE'),
-    check('name','El campo name es obligatorio').not().isEmpty(),
+    check('name', 'El campo name es obligatorio').not().isEmpty(),
+    check('lastModified').custom( isDate ),
     validarCampos  
 ], newCategory);
 
@@ -41,6 +44,7 @@ router.put('/:id', [
     check('id').custom( existeCategoriaId ),
     check('name','El campo name es obligatorio').not().isEmpty(),
     check('name').custom( existeCategoriaNombre ),
+    check('lastModified').custom( isDate ),
     validarCampos
 ], updateCategory);
 

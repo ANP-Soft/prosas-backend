@@ -5,6 +5,10 @@ const RoleSchema = Schema({
     role: {
         type: String,
         required: [true, 'El rol es obligatorio']
+    },
+    lastModified: {
+        type: Date,
+        required: [true, 'La fecha de modificacion/creacion es obligatoria']
     }
     
 });

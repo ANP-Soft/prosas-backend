@@ -16,6 +16,10 @@ const CategorySchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    lastModified: {
+        type: Date,
+        required: [true, 'La fecha de modificacion/creacion es obligatoria']
     }
 });
 

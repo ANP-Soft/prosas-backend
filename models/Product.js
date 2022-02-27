@@ -35,6 +35,10 @@ const ProductSchema = Schema({
     status: {
         type: Boolean,
         default: true
+    },
+    lastModified: {
+        type: Date,
+        required: [true, 'La fecha de modificacion/creacion es obligatoria']
     }
 });
 

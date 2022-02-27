@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validarCampos, validarJWT } = require('../middlewares');
-const { loginUser, revalidarToken, googleSignIn, facebookSignIn } = require('../controllers/auth');
+const { loginUser, revalidarToken, googleSignIn, facebookSignIn, reCaptcha } = require('../controllers/auth');
 
 const router = Router();
 /*
@@ -30,6 +30,10 @@ router.post('/facebook', [
     validarCampos
 ], facebookSignIn);
 
+router.post('/recaptcha', [
+    check('idTokenReCaptcha', 'El campo idTokenReCaptcha es necesario').not().isEmpty(),
+    validarCampos
+], reCaptcha);
 //Revalidar JWT
 router.get('/renew', validarJWT, revalidarToken);
 

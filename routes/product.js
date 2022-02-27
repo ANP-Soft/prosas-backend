@@ -4,6 +4,7 @@ const { check } = require('express-validator');
 const { validarCampos, validarJWT, tieneRole } = require('../middlewares');
 const { existeProductoId, existeCategoriaId, existeProductoNombre } = require('../helpers/db-validators');
 const { getProduct, getProducts, newProduct, updateProduct, deleteProduct } = require('../controllers/product');
+const { isDate } = require('../helpers/date-validators');
 
 /**
  *      {{url}}/api/product
@@ -39,6 +40,7 @@ router.post('/', [
     check('description').isString().optional({ nullable: true }),
     check('stock').isNumeric().optional({ nullable: true }),
     check('url').isString().optional({ nullable: true }),
+    check('lastModified').custom( isDate ),
 
     validarCampos 
 ], newProduct);
@@ -53,6 +55,7 @@ router.put('/:id', [
     check('description').isString().optional({ nullable: true }),
     check('stock').isNumeric().optional({ nullable: true }),
     check('url').isString().optional({ nullable: true }),
+    check('lastModified').custom( isDate ),
 
     validarCampos
 ], updateProduct);

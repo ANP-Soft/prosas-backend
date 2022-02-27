@@ -60,6 +60,7 @@ const getCategory = async (req = request, res = response) => {
 const newCategory = async (req = request, res = response) => {
 
     const name = req.body.name.toUpperCase();
+    const { lastModified } = req.body;
 
     try {
 
@@ -75,7 +76,8 @@ const newCategory = async (req = request, res = response) => {
         //Generar data a guardar
         const data = {
             name,
-            user: req.user._id
+            user: req.user._id,
+            lastModified
         }
         const category = new Category(data);
         //Grabar data
@@ -99,12 +101,14 @@ const updateCategory = async (req = request, res = response) => {
 
     const { id } = req.params;
     const name = req.body.name.toUpperCase();
+    const { lastModified } = req.body;
 
     try {
         //otra opcion es desestructurar req.body, para dejar afuera los que no necesitamos actualizar por seguridad --> estado, usuario , en lo anterior solo se saca del body lo que es necesario actualizar -> nombre
         const data = {
             name,
-            user: req.user._id
+            user: req.user._id,
+            lastModified
         }
 
         const category = await Category.findByIdAndUpdate(id, data, { new: true });
