@@ -126,6 +126,16 @@ const existeOrderId = async (_id) => {
 
 }
 
+//Validar colecciones permitidas
+const coleccionesPermitidas = ( coleccion='', colecciones = [] ) => {
+    const incluida = colecciones.includes(coleccion);
+    if(!incluida) {
+        throw new Error(`La coleccion ${coleccion} no es permitida, permitidas ${colecciones}`);
+    }
+
+    return true;
+}
+
 //NOT USED, using --> mongo-secuence autoIncrement
 // const existeOrderNumber = async (number) => {
     
@@ -148,4 +158,6 @@ module.exports = {
     existeProductoNombre,
     
     existeOrderId,
+
+    coleccionesPermitidas
 }

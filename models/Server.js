@@ -1,6 +1,6 @@
 const express = require('express'); //minimalist web framework for Node.js applications
 const cors = require('cors'); //CORS-> Cross-origin resource sharing (CORS) 
-// const fileUpload = require('express-fileupload');
+const fileupload = require('express-fileupload');
 const { createServer } = require('http');
 
 const { validarJSON } = require('../middlewares/validar-json');
@@ -20,7 +20,8 @@ class Server {
             categories: '/api/category',
             products: '/api/product',
             orders: '/api/order',
-            search: '/api/search'
+            search: '/api/search',
+            upload: '/api/upload'
         }
 
         //Conectar a DB
@@ -49,6 +50,10 @@ class Server {
 
         //Directorio Público
         this.app.use(express.static('public'));
+
+        //Fileupload -- carga de archivos
+        this.app.use(fileupload({ useTempFiles : true }));
+
     }
 
     routes() {
@@ -58,6 +63,7 @@ class Server {
         this.app.use(this.paths.products, require('../routes/product'));
         this.app.use(this.paths.orders, require('../routes/order'));
         this.app.use(this.paths.search, require('../routes/search'));
+        this.app.use(this.paths.upload, require('../routes/upload'));
 
         this.app.get("*" , (req, res) => {
             res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
