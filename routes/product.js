@@ -49,7 +49,7 @@ router.post('/', [
 router.put('/:id', [
     tieneRole('ADMIN_ROLE'),
     check('id').custom(existeProductoId),
-    check('name').custom(existeProductoNombre).optional({ nullable: true }),
+    check('name').optional({ nullable: true }),
     check('category').custom(existeCategoriaId).optional({ nullable: true }),
     check('price').isNumeric().optional({ nullable: true }),
     check('description').isString().optional({ nullable: true }),

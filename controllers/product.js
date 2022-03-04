@@ -1,5 +1,7 @@
 const { response, request } = require("express");
+const cloudinary = require('cloudinary').v2;
 
+cloudinary.config(process.env.CLOUDINARY_URL);
 const { Product } = require('../models');
 
 
@@ -143,10 +145,23 @@ const deleteProduct = async (req = request, res = response) => {
     const { id } = req.params;
 
     try {
-
-        const product = await Product.findByIdAndUpdate(id, { status: false }, { new: true });
         
-        res.status(200).json({
+        const product = await Product.findById(id);
+        if(product.img){
+            const nombreArr = product.img.split('/');
+            const nombre = nombreArr[ nombreArr.length - 1 ];
+            const[ public_id, extension ] = nombre.split('.');
+            
+            cloudinary.uploader.destroy(public_id);
+        }
+
+        product.img = '';
+        product.status = false;
+        product.save();
+
+        // const productUpdate = await Product.findByIdAndUpdate(id, { status: false, img: '' }, { new: true });
+        
+        return res.status(200).json({
             ok: true,
             product
         });

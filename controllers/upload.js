@@ -1,13 +1,13 @@
 const cloudinary = require('cloudinary').v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 const { response } = require('express');
+const moment = require('moment');
 
 const { Product } = require('../models');
 
 const insertarImgCloudinary = async (req, res = response) => {
 
     const { id, coleccion } = req.params;
-
     let modelo;
 
     switch(coleccion){
@@ -33,6 +33,7 @@ const insertarImgCloudinary = async (req, res = response) => {
     //Limpiar imgs previas
         //ej: https://res.cloudinary.com/nhf/image/upload/v1628644450/ren1qaudro56imrd7wzp.png
 
+    
     if(modelo.img){
         const nombreArr = modelo.img.split('/');
         const nombre = nombreArr[ nombreArr.length - 1 ];
@@ -44,13 +45,13 @@ const insertarImgCloudinary = async (req, res = response) => {
     const { tempFilePath } = req.files.img;
     const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
     modelo.img = secure_url;
+    modelo.lastModified = moment().toDate();
     await modelo.save();
 
-    res.json({
+    return res.json({
         ok: true,
-        modelo
+        product: modelo
     });
-
 }
 
 module.exports = {
