@@ -80,13 +80,16 @@ const updateUser = async (req, res = response) => {
 const getUsers = async (req, res = response) => {
 
     const { limit = 5, desde = 0 } = req.query;
-    const query = { status: true };
+    // const query = { status: true };
 
     try {
 
         const [total, users] = await Promise.all([
-            User.countDocuments(query),
-            User.find(query)
+            //COMENTADO PARA QUE DEVUELVA USERS QUE ESTAN DESHABILITADOS --> { status: false }
+            // User.countDocuments(query),
+            // User.find(query)
+            User.countDocuments(),
+            User.find()
                 .skip(Number(desde))
                 .limit(Number(limit))
         ]);
