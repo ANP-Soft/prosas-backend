@@ -49,7 +49,7 @@ const newUser = async (req, res = response) => {
 const updateUser = async (req, res = response) => {
 
     const { id } = req.params;
-    const { _id, password, role, ...resto  } = req.body; //Rest Parameters, gathers the rest of the list of arguments into an array
+    const { _id, password, ...resto  } = req.body; //Rest Parameters, gathers the rest of the list of arguments into an array
 
     try {
 
