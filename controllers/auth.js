@@ -1,5 +1,6 @@
 const { response, request } = require('express');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 
 const { User } = require('../models');
 const { generarJWT } = require('../helpers/jwt');
@@ -103,7 +104,8 @@ const googleSignIn = async (req, res = response) => {
                     name,
                     email,
                     password: ':P',
-                    google: true
+                    google: true,
+                    lastModified: moment().toDate(),
                 };
 
                 user = new User(data);
@@ -160,7 +162,8 @@ const facebookSignIn = async (req, res = response) => {
                     name,
                     email,
                     password: ':P',
-                    facebook: true
+                    facebook: true,
+                    lastModified: moment().toDate(),
                 };
     
                 user = new User(data);
